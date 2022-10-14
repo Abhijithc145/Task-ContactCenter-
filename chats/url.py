@@ -3,7 +3,7 @@ from .import views
 from .views import *
 
 urlpatterns = [
-    path("chat_organizations/",Organizations.as_view(),name="chat_organizations"),
-    # path("chat_organizations/<str:uuid>",organization_list.as_view(),name="chat_organizationslist"),
+    path("chat_organizations/",Organizationss.as_view(),name="chat_organizations"),
+    path("chat/<uuid:pk>",organization_list.as_view(),name="chat_organizationslist"),
     
 ]
