@@ -6,14 +6,19 @@ from .models import *
 class organization_Serializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Organizations
+        model = Organization
         fields = "__all__"        
 
+# class create_organization_Serializer(serializers.ModelSerializer):
 
+#     class Meta:
+#         model = Organizations
+#         fields = "__all__"   
 
 class department_Serializer(serializers.ModelSerializer):
-    organization = organization_Serializer()
     
     class Meta:
         model = Department
-        fields = "__all__"                
+        fields = "__all__" 
+                      
+    # organization = organization_Serializer(read_only=True)

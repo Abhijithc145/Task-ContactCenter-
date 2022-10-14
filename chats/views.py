@@ -5,45 +5,130 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import *
 from .models import *
-
+from django.shortcuts import render,get_object_or_404
+import datetime
+from rest_framework import viewsets
 # Create your views here.
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin,CreateModelMixin,RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin
 
 
-class Organizationss(APIView):
-    def get(self,request):
-        datas = Organizations.objects.all()
-        serializers = organization_Serializer(datas,many = True).data
-        return Response(serializers,status=status.HTTP_200_OK)
+# organization CRUD
+
+class OrganizationsList(GenericAPIView,ListModelMixin,CreateModelMixin):
+    queryset = Organization.objects.filter(is_active = True)
+    serializer_class = organization_Serializer
+    def get(self,request,*args,**kwargs):
+        
+        return self.list(request,*args,**kwargs)  
+
+    def post(self,request,*args,**kwargs):
+        
+        return self.create(request,*args,**kwargs) 
 
 
-    def post(self,request):
-        serializer = organization_Serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_200_OK)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)   
-
-
-class organization_list(APIView):
+class organizationDetails(APIView):
     def get(self,request,pk = None):
 
         if pk:
-            datas = Organizations.objects.get(id=pk)
-            serializer = organization_Serializer(datas)
-            return Response({ "data": serializer.data}, status=status.HTTP_200_OK)
+            try:
+                datas = Organization.objects.get(id=pk,is_active = True)
+                serializer = organization_Serializer(datas)
+                return Response({ "data": serializer.data}, status=status.HTTP_200_OK)
+            except:
+                return Response({"Error":"The data is no here"})    
  
-        datas = Organizations.objects.all()
+        datas = Organization.objects.all()
         serializer = organization_Serializer(datas, many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)  
 
 
     def put(self,request,pk = None):
-        datas = Organizations.objects.get(id=pk)
-        serializer = organization_Serializer(datas, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status": "success", "data": serializer.data})
-        else:
-            return Response({"status": "error", "data": serializer.errors})                   
+        try:
+            datas = Organization.objects.get(id=pk)
+            serializer = organization_Serializer(datas, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": "success", "data": serializer.data})
+            else:
+                return Response({"status": "error", "data": serializer.errors})   
+        except:
+                return Response({"Error":"The data is no here"})          
+
+    def delete(self,request,pk = None):
+        data = get_object_or_404(Organization, id = pk)
+        data.is_active = not(data.is_active)
+        data.deleted_at =datetime.datetime.now() 
+        data.save()
+        return Response({"status": "success", "data": "student Deleted"})                    
+
+
+
+#       Department CRUD
+
+class DepartmentList(APIView):
+    def get(self,request):
+        datas = Department.objects.filter(is_active = True)
+        serializer =department_Serializer(datas,many=True)
+        return Response(serializer.data)  
+        
+    def post(self,request):
+        try:
+            # org_id = request.data.get('organization')
+            # org =  organization_Serializer(Organization.objects.get(id=org_id)).data['id']
+            # request.data['organization'] = org
+            # print(org)
+            # print(request.data['organization'],"----------------------------")
+            # # print(request.data,"lllllllllllllllllllllllll")
+            # print("request", request.data)
+            serializer = department_Serializer(data=request.data)
+            if serializer.is_valid():   
+                serializer.save()
+                print(serializer)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)    
+        except Exception as err:
+            print(err)
+            return Response("ERR")  
+
+
+
+class DepartmentDetails(APIView):
+    def get(self,request,pk):
+        try:
+            datas = Department.objects.get(id=pk,is_active = True)
+            serilizer = department_Serializer(datas)
+            return Response({ "data": serilizer.data}, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+    def put(self,request,pk):
+        try:
+            datas = Department.objects.get(id=pk,is_active = True)
+            serializer = department_Serializer(datas, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": "success", "data": serializer.data})
+            else:
+                return Response({"status": "error", "data": serializer.errors}) 
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+
+    def delete(self,request,pk):
+        try:
+            data = get_object_or_404(Department, id = pk)
+            data.is_active = not(data.is_active)
+            data.deleted_at =datetime.datetime.now() 
+            data.save()
+            return Response({"status": "success", "data": "student Deleted"}) 
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+        
+
+
+
