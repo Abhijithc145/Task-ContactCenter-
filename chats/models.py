@@ -77,12 +77,57 @@ class Channel_Model(models.Model):
 class Conversations_Model(models.Model):
     id = models.UUIDField(primary_key = True,default = uuid.uuid4,editable = False)
     name = models.CharField(max_length = 100,null = False)
+    Channel = models.CharField(max_length = 100,null = False)
+    sender_id = models.PositiveIntegerField(null=True, blank=True)
+    sender_name = models.CharField(max_length = 100,null = False)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
     created_by = models.CharField(max_length = 100,null = True)
     is_active = models.BooleanField(default=True)
     deleted_by = models.CharField(max_length = 100,null = True)
     Bot_data = models.ForeignKey(Bot_Model, on_delete=models.CASCADE)
+    Channel = models.CharField(max_length = 100,null = False)
+    agent = models.CharField(max_length = 100,null = False)
+    status = models.CharField(max_length = 100,null = False)
 
     def __str__(self):
         return self.id
 
+
+
+Roles=(
+    ('user', 'user'),
+    ('agent', 'agent')
+
+)
+
+class Message_Module(models.Model):
+    id = models.UUIDField(primary_key = True,default = uuid.uuid4,editable = False)
+    sender_id = models.PositiveIntegerField(null=True, blank=True)
+    Channel = models.CharField(max_length = 100,null = False)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+    created_by = models.CharField(max_length = 100,null = True)
+    is_active = models.BooleanField(default=True)
+    deleted_by = models.CharField(max_length = 100,null = True)
+    conversation_data = models.ForeignKey(Conversations_Model, on_delete=models.CASCADE)
+    autor = models.CharField(max_length = 100,null = False)
+    autor_type = models.CharField(max_length=10,choices = Roles,default = 'user')
+
+    def __str__(self):
+        return self.id
+
+
+class UserProfile_Module(models.Model):
+    id = models.UUIDField(primary_key = True,default = uuid.uuid4,editable = False)
+    sender_id = models.PositiveIntegerField(null=True, blank=True)
+    Channel = models.CharField(max_length = 100,null = False)
+    name = models.CharField(max_length = 100,null = False)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+    created_by = models.CharField(max_length = 100,null = True)
+    is_active = models.BooleanField(default=True)
+    deleted_by = models.CharField(max_length = 100,null = True)
+    option = models.BooleanField(default=True)
+    phone_number = models.CharField(max_length=10,null=False)
+    
+
+    def __str__(self):
+        return self.id
