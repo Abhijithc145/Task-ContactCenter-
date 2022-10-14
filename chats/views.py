@@ -132,3 +132,115 @@ class DepartmentDetails(APIView):
 
 
 
+class AgentList(APIView):
+    def get(self,request):
+        datas = Agent_Model.objects.filter(is_active = True)
+        serializer =agent_Serializer(datas,many=True)
+        return Response(serializer.data)  
+        
+    def post(self,request):
+        try:
+     
+            serializer = agent_Serializer(data=request.data)
+            if serializer.is_valid():   
+                serializer.save()
+                print(serializer)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)    
+        except Exception as err:
+            print(err)
+            return Response("ERR")  
+
+
+class AgentDetails(APIView):   
+    def get(self,request,pk):
+        try:
+            datas = Agent_Model.objects.get(id=pk,is_active = True)
+            serilizer = agent_Serializer(datas)
+            return Response({ "data": serilizer.data}, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+    def put(self,request,pk):
+        try:
+            datas = Agent_Model.objects.get(id=pk,is_active = True)
+            serializer = agent_Serializer(datas, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": "success", "data": serializer.data})
+            else:
+                return Response({"status": "error", "data": serializer.errors}) 
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+
+    def delete(self,request,pk):
+        try:
+            data = get_object_or_404(Agent_Model, id = pk)
+            data.is_active = not(data.is_active)
+            data.deleted_at =datetime.datetime.now() 
+            data.save()
+            return Response({"status": "success", "data": "student Deleted"}) 
+        except Exception as err:
+            print(err)         
+
+
+
+class BotList(APIView):
+    def get(self,request):
+        datas = Bot_Model.objects.filter(is_active = True)
+        serializer =bot_Serializer(datas,many=True)
+        return Response(serializer.data)  
+        
+    def post(self,request):
+        try:
+     
+            serializer = bot_Serializer(data=request.data)
+            if serializer.is_valid():   
+                serializer.save()
+                print(serializer)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)    
+        except Exception as err:
+            print(err)
+            return Response("ERR")              
+
+
+class BotDetails(APIView):   
+    def get(self,request,pk):
+        try:
+            datas = Bot_Model.objects.get(id=pk,is_active = True)
+            serilizer = bot_Serializer(datas)
+            return Response({ "data": serilizer.data}, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+    def put(self,request,pk):
+        try:
+            datas = Bot_Model.objects.get(id=pk,is_active = True)
+            serializer = bot_Serializer(datas, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": "success", "data": serializer.data})
+            else:
+                return Response({"status": "error", "data": serializer.errors}) 
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+
+    def delete(self,request,pk):
+        try:
+            data = get_object_or_404(Bot_Model, id = pk)
+            data.is_active = not(data.is_active)
+            data.deleted_at =datetime.datetime.now() 
+            data.save()
+            return Response({"status": "success", "data": "student Deleted"}) 
+        except Exception as err:
+            print(err)         
+

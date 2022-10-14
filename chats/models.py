@@ -74,5 +74,15 @@ class Channel_Model(models.Model):
         return self.id
 
 
-# class User_Profile_Model(models.Model):
+class Conversations_Model(models.Model):
+    id = models.UUIDField(primary_key = True,default = uuid.uuid4,editable = False)
+    name = models.CharField(max_length = 100,null = False)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+    created_by = models.CharField(max_length = 100,null = True)
+    is_active = models.BooleanField(default=True)
+    deleted_by = models.CharField(max_length = 100,null = True)
+    Bot_data = models.ForeignKey(Bot_Model, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.id
 
