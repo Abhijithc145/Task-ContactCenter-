@@ -244,3 +244,115 @@ class BotDetails(APIView):
         except Exception as err:
             print(err)         
 
+class ConversationList(APIView):
+    def get(self,request):
+        datas = Conversations_Model.objects.filter(is_active = True)
+        serializer =conversation_Serializer(datas,many=True)
+        return Response(serializer.data)  
+        
+    def post(self,request):
+        print(request.data,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+        try:
+     
+            serializer = conversation_Serializer(data=request.data)
+            if serializer.is_valid():   
+                serializer.save()
+                print(serializer)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)    
+        except Exception as err:
+            print(err)
+            return Response("ERR")     
+
+
+class ConversationDetails(APIView):   
+    def get(self,request,pk):
+        try:
+            datas = Conversations_Model.objects.get(id=pk,is_active = True)
+            serilizer = conversation_Serializer(datas)
+            return Response({ "data": serilizer.data}, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+    def put(self,request,pk):
+        try:
+            datas = Conversations_Model.objects.get(id=pk,is_active = True)
+            serializer = conversation_Serializer(datas, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": "success", "data": serializer.data})
+            else:
+                return Response({"status": "error", "data": serializer.errors}) 
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+
+    def delete(self,request,pk):
+        try:
+            data = get_object_or_404(Conversations_Model, id = pk)
+            data.is_active = not(data.is_active)
+            data.deleted_at =datetime.datetime.now() 
+            data.save()
+            return Response({"status": "success", "data": "student Deleted"}) 
+        except Exception as err:
+            print(err)  
+
+
+class MessageList(APIView):
+    def get(self,request):
+        datas =Message_Module.objects.filter(is_active = True)
+        serializer =message_Serializer(datas,many=True)
+        return Response(serializer.data)  
+        
+    def post(self,request):
+        print(request.data,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+        try:
+     
+            serializer = message_Serializer(data=request.data)
+            if serializer.is_valid():   
+                serializer.save()
+                print(serializer)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)    
+        except Exception as err:
+            print(err)
+            return Response("ERR")     
+
+
+class MessageListDetails(APIView):   
+    def get(self,request,pk):
+        try:
+            datas = Message_Module.objects.get(id=pk,is_active = True)
+            serilizer = message_Serializer(datas)
+            return Response({ "data": serilizer.data}, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+    def put(self,request,pk):
+        try:
+            datas = Message_Module.objects.get(id=pk,is_active = True)
+            serializer = message_Serializer(datas, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": "success", "data": serializer.data})
+            else:
+                return Response({"status": "error", "data": serializer.errors}) 
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+
+    def delete(self,request,pk):
+        try:
+            data = get_object_or_404(Message_Module, id = pk)
+            data.is_active = not(data.is_active)
+            data.deleted_at =datetime.datetime.now() 
+            data.save()
+            return Response({"status": "success", "data": "student Deleted"}) 
+        except Exception as err:
+            print(err)  

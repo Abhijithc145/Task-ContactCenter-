@@ -37,7 +37,11 @@ class bot_Serializer(serializers.ModelSerializer):
         model = Bot_Model
         fields = "__all__"          
 
-
+class channel_Serializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Channel_Model
+        fields = "__all__"   
 
 class conversation_Serializer(serializers.ModelSerializer):
     
@@ -50,3 +54,9 @@ class message_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Message_Module
         fields = "__all__"                   
+
+class userprofile_Serializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = UserProfile_Module
+        fields = "__all__"                           
