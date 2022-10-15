@@ -17,7 +17,9 @@ urlpatterns = [
     path("conversations/",ConversationList.as_view(),name="bots"),
     path("conversations/<uuid:pk>",ConversationDetails.as_view(),name="bots_data"),
     path("message/",MessageList.as_view(),name="message_data"),
-    path("message/<uuid:pk>",MessageListDetails.as_view(),name="bots_data"),
+    path("message/<uuid:pk>",MessageDetails.as_view(),name="bots_data"),
+    path("userprofiles/",UserProfileList.as_view(),name="userprofile_data"),
+    path("userprofiles/<uuid:pk>",UserProfileDetails.as_view(),name="userprofile_data"),
 
     
 ]
