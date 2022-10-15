@@ -20,6 +20,8 @@ urlpatterns = [
     path("message/<uuid:pk>",MessageDetails.as_view(),name="bots_data"),
     path("userprofiles/",UserProfileList.as_view(),name="userprofile_data"),
     path("userprofiles/<uuid:pk>",UserProfileDetails.as_view(),name="userprofile_data"),
+    path("channels/",ChannelList.as_view(),name="channel_data"),
+    path("channels/<uuid:pk>",ChannelDetails.as_view(),name="userprofile_data"),
 
     
 ]

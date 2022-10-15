@@ -68,6 +68,7 @@ class Channel_Model(models.Model):
     created_by = models.CharField(max_length = 100,null = True)
     is_active = models.BooleanField(default=True)
     deleted_by = models.CharField(max_length = 100,null = True)
+    credential =models.JSONField("json", null=False, default=dict)
     Bot_data = models.ForeignKey(Bot_Model, on_delete=models.CASCADE)
 
     def __str__(self):

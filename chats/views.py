@@ -415,3 +415,66 @@ class UserProfileDetails(APIView):
             return Response({"status": "success", "data": "student Deleted"}) 
         except Exception as err:
             print(err)  
+
+            
+
+
+class ChannelList(APIView):
+    def get(self,request):
+        datas =Channel_Model.objects.filter(is_active = True)
+        serializer =channel_Serializer(datas,many=True)
+        return Response(serializer.data)  
+        
+    def post(self,request):
+        print(request.data,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+        try:
+     
+            serializer = channel_Serializer(data=request.data)
+            if serializer.is_valid():   
+                serializer.save()
+                print(serializer)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)    
+        except Exception as err:
+            print(err)
+            return Response("ERR")            
+
+
+#             
+
+class ChannelDetails(APIView):   
+    def get(self,request,pk):
+        try:
+            datas = Channel_Model.objects.get(id=pk,is_active = True)
+            serilizer = channel_Serializer(datas)
+            return Response({ "data": serilizer.data}, status=status.HTTP_200_OK)
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+    def put(self,request,pk):
+        try:
+            datas = Channel_Model.objects.get(id=pk,is_active = True)
+            serializer = channel_Serializer(datas, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": "success", "data": serializer.data})
+            else:
+                return Response({"status": "error", "data": serializer.errors}) 
+        except Exception as err:
+            print(err)
+            return Response({"Error":"Error"})  
+
+
+    def delete(self,request,pk):
+        try:
+            data = get_object_or_404(Channel_Model, id = pk)
+            data.is_active = not(data.is_active)
+            data.deleted_at =datetime.datetime.now() 
+            data.save()
+            return Response({"status": "success", "data": "student Deleted"}) 
+        except Exception as err:
+            print(err)  
+
+            
